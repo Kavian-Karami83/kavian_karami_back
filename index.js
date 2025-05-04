@@ -2,6 +2,7 @@ const axios = require('axios');
 
 const models = 'https://lm-models.s3.ir-thr-at1.arvanstorage.ir/cars.json';
 const currency = 'https://baha24.com/api/v1/price';
+const MarketPriceData = 'https://lm-models.s3.ir-thr-at1.arvanstorage.ir/market_prices.json';
 
 axios.get(models)
     .then(function (response) {
@@ -22,3 +23,11 @@ axios.get(currency)
     }
 
     );
+
+axios.get(MarketPriceData)
+    .then(function (response) {
+        console.log(response.data);
+    })
+    .catch(function (error) {
+        console.log(error);
+    });

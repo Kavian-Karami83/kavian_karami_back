@@ -26,4 +26,15 @@ async function getCarsData() {
 getCurrencyData().then(data => {
     console.log('Currency data:', data);
   });
-  
+  async function getMarketPriceData() {
+    try {
+        const response = await axios.get('https://lm-models.s3.ir-thr-at1.arvanstorage.ir/market_prices.json')
+        return response.data;
+    } catch (error) {
+        console.error('❌ Error fetching market price data:', error.message);
+        return [];
+    }
+}
+getMarketPriceData().then(data => {
+    console.log('Market price data:', data);
+});

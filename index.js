@@ -1,33 +1,15 @@
 const axios = require('axios');
 
-const models = 'https://lm-models.s3.ir-thr-at1.arvanstorage.ir/cars.json';
-const currency = 'https://baha24.com/api/v1/price';
-const MarketPriceData = 'https://lm-models.s3.ir-thr-at1.arvanstorage.ir/market_prices.json';
-
-axios.get(models)
-    .then(function (response) {
-        console.log(response.data);
-    })
-    .catch(function (error) {
-        console.log(error);
-    });
-
-axios.get(currency)
-    .then(function (response) {
-        console.log(response.data.USD);
-
-
-    })
-    .catch(function (error) {
-        console.log(error);
+async function getCarsData() {
+    try {
+      const response = await axios.get('https://lm-models.s3.ir-thr-at1.arvanstorage.ir/cars.json');
+      return response.data;
+    } catch (error) {
+      console.error('❌ Error fetching cars data:', error.message);
+      return [];
     }
-
-    );
-
-axios.get(MarketPriceData)
-    .then(function (response) {
-        console.log(response.data);
-    })
-    .catch(function (error) {
-        console.log(error);
-    });
+  }
+  getCarsData().then(data => {
+    console.log('🚗 Cars Data:', data);
+  });
+  

@@ -1,4 +1,5 @@
 const axios = require('axios');
+const fs = require('fs/promises');
 async function getCarsData() {
     try {
         const response = await axios.get('https://lm-models.s3.ir-thr-at1.arvanstorage.ir/cars.json');
@@ -31,17 +32,37 @@ async function getMarketPriceData() {
     }
 }
 
-
-async function main() {
-    const [carsData, currencyData, marketPriceData] = await Promise.all([
+async function processAndSaveData() {
+    const [cars, marketPrices, usd] = await Promise.all([
         getCarsData(),
-        getCurrencyData(),
-        getMarketPriceData()
+        getMarketPriceData(),
+        getCurrencyData()
     ]);
 
-    console.log('Cars:', carsData.length);
-    console.log('Currency (USD):', currencyData);
-    console.log('Market Prices:', marketPriceData.length);
-}
+    const enrichedCars = cars.map(car => {
+        const match = marketPrices.find(marketCar =>
+            marketCar.brand === car.brand &&
+            marketCar.model === car.model &&
+            marketCar.year === car.year
+        );
 
-main();
+        const priceDiff = match ? car.price - match.average_price : 0;
+        const mileageDiff = match ? car.mileage - match.average_mileage : 0;
+        const priceUsd = car.price / usd.sell;
+
+        return {
+            ...car,
+            price_diff_from_average: priceDiff,
+            mileage_diff_from_average: mileageDiff,
+            price_usd: Math.round(priceUsd)
+        };
+    });
+
+    try {
+        await fs.writeFile('cars_data.json', JSON.stringify(enrichedCars, null, 2), 'utf-8');
+        console.log('Enriched car data saved to cars_data.json');
+    } catch (error) {
+        console.error('Error saving data file:', error.message);
+    }
+}
+processAndSaveData();

@@ -10,6 +10,20 @@ async function getCarsData() {
     }
   }
   getCarsData().then(data => {
-    console.log('🚗 Cars Data:', data);
+    console.log('Cars data:', data);
+  });
+  
+
+ async function getCurrencyData() {
+    try {
+        const response = await axios.get('https://baha24.com/api/v1/price')
+        return response.data.USD;
+    } catch (error) {
+        console.error('❌ Error fetching currency data:', error.message);
+        return [];
+    }
+}
+getCurrencyData().then(data => {
+    console.log('Currency data:', data);
   });
   

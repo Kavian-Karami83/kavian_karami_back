@@ -4,7 +4,8 @@
   "description": "",
   "main": "kavian_karami_assignment_1.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "questions": "node Questions.js"
   },
   "keywords": [],
   "author": "",
